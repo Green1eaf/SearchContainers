@@ -1,15 +1,22 @@
 package com.smirnov.search;
 
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private static final Map<String, String> storage = new HashMap<>();
@@ -36,14 +43,8 @@ public class MainActivity extends AppCompatActivity {
         editTextScan.setOnEditorActionListener((v, actionId, event) -> {
             if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                 String result = editTextScan.getText().toString();
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Result");
-                if (storage.containsKey(getNumbers(result))) {
-                    builder.setMessage(getNumbers(result) + "\nзадержка: " + storage.get(getNumbers(result)));
-                } else {
-                    builder.setMessage(getNumbers(result) + "\nНе найдена");
-                }
-                builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss()).show();
+                getToast(result);
+                //getAlert(result);
                 editTextScan.getText().clear();
                 editTextScan.requestFocus();
                 editTextScan.setSelection(0);
@@ -51,6 +52,28 @@ public class MainActivity extends AppCompatActivity {
 
             return false;
         });
+    }
+
+    private void getToast(String result) {
+        SpannableStringBuilder biggerText = new SpannableStringBuilder(getMessage(result));
+        biggerText.setSpan(new RelativeSizeSpan(1.35f), 0, getMessage(result).length(), 0);
+        Toast toast = Toast.makeText(MainActivity.this, biggerText, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.show();
+    }
+
+    private String getMessage(String result) {
+        if (storage.containsKey(getNumbers(result))) {
+            return getNumbers(result) + "\nзадержка: " + storage.get(getNumbers(result));
+        }
+        return getNumbers(result) + "\nНе найдена";
+    }
+
+    private void getAlert(String result) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Result");
+        builder.setMessage(getMessage(result));
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss()).show();
     }
 
     private static String getNumbers(String s) {
