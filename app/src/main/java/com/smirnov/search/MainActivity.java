@@ -1,5 +1,6 @@
 package com.smirnov.search;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
@@ -61,9 +62,19 @@ public class MainActivity extends AppCompatActivity {
 
     private String getMessage(String result) {
         if (storage.containsKey(getNumbers(result))) {
+            playSound(com.google.zxing.client.android.R.raw.zxing_beep);
             return getNumbers(result) + "\nзадержка: " + storage.get(getNumbers(result));
         }
         return getNumbers(result) + "\nНе найдена";
+    }
+
+    private void playSound(int resId){
+        MediaPlayer mp = MediaPlayer.create(MainActivity.this, resId);
+        mp.setOnCompletionListener(mediaPlayer -> {
+            mediaPlayer.reset();
+            mediaPlayer.release();
+        });
+        mp.start();
     }
 
     private void getAlert(String result) {
