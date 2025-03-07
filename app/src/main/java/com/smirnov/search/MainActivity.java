@@ -10,14 +10,15 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    private static final Map<String, String> storage = new HashMap<>();
+    private static final Set<String> storage = new HashSet<>();
 
     EditText editTextScan;
 
@@ -25,16 +26,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int keysId = R.string.keys;
-        int valuesId = R.string.values;
+//        int keysId = R.string.keys;
+        int dict1 = R.string.dict1;
+        int dict2 = R.string.dict2;
+        int dict3 = R.string.dict3;
+        int dict4 = R.string.dict4;
+        int dict5 = R.string.dict5;
+        int dict6 = R.string.dict6;
+        int dict7 = R.string.dict7;
+        //int valuesId = R.string.values;
 
-        String keys = getString(keysId);
-        String values = getString(valuesId);
-        String[] keysSplit = keys.split("\\s+");
-        String[] valuesSplit = values.split(";");
-        for (int i = 0; i < keysSplit.length; i++) {
-            storage.put(keysSplit[i], valuesSplit[i]);
-        }
+        //String keys = getString(keysId);
+        //int valuesId = R.string.values;
+        //String values = getString(valuesId);
+        //String[] keysSplit = keys.split("\\s+");
+        //String[] valuesSplit = values.split(";");
+        storage.addAll(getDict(dict1));
+        storage.addAll(getDict(dict2));
+        storage.addAll(getDict(dict3));
+        storage.addAll(getDict(dict4));
+        storage.addAll(getDict(dict5));
+        storage.addAll(getDict(dict6));
+        storage.addAll(getDict(dict7));
 
         setContentView(R.layout.activity_main);
         editTextScan = findViewById(R.id.editTextText);
@@ -52,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private List<String> getDict(int dictId){
+        String dict = getString(dictId);
+        String[] dictSplit = dict.split("\\s+");
+        return Arrays.asList(dictSplit);
+    }
+
     private void getToast(String result) {
         SpannableStringBuilder biggerText = new SpannableStringBuilder(getMessage(result));
         biggerText.setSpan(new RelativeSizeSpan(1.35f), 0, getMessage(result).length(), 0);
@@ -61,11 +80,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getMessage(String result) {
-        if (storage.containsKey(getNumbers(result))) {
+        String number = getNumbers(result);
+        if (storage.contains(getNumbers(result))) {
             playSound(com.google.zxing.client.android.R.raw.zxing_beep);
-            return getNumbers(result) + "\nзадержка: " + storage.get(getNumbers(result));
+            return getNumbers(result) + "\nобнаружен: " + number;
         }
-        return getNumbers(result) + "\nНе найдена";
+        return getNumbers(result) + "\n-";
     }
 
     private void playSound(int resId){
@@ -77,12 +97,12 @@ public class MainActivity extends AppCompatActivity {
         mp.start();
     }
 
-    private void getAlert(String result) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Result");
-        builder.setMessage(getMessage(result));
-        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss()).show();
-    }
+//    private void getAlert(String result) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//        builder.setTitle("Result");
+//        builder.setMessage(getMessage(result));
+//        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss()).show();
+//    }
 
     private static String getNumbers(String s) {
         char[] chars = s.toCharArray();
