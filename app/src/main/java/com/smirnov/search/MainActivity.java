@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private List<String> getDict(int dictId){
+    private List<String> getDict(int dictId) {
         String dict = getString(dictId);
         String[] dictSplit = dict.split("\\s+");
         return Arrays.asList(dictSplit);
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         return getNumbers(result) + "\n-";
     }
 
-    private void playSound(int resId){
+    private void playSound(int resId) {
         MediaPlayer mp = MediaPlayer.create(MainActivity.this, resId);
         mp.setOnCompletionListener(mediaPlayer -> {
             mediaPlayer.reset();
