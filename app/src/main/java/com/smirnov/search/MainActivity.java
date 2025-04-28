@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private String getMessage(String result) {
         if (storage.containsKey(getNumbers(result))) {
             playSound(com.google.zxing.client.android.R.raw.zxing_beep);
-            return getNumbers(result) + "\nзадержка: " + storage.get(getNumbers(result));
+            return getNumbers(result) + "\n" + storage.get(getNumbers(result));
         }
         return getNumbers(result) + "\nНе найдена";
     }
